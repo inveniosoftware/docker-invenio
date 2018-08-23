@@ -8,4 +8,10 @@
 ===============
  Docker Invenio
 ===============
+
+.. image:: https://img.shields.io/docker/automated/inveniosoftware/centos7-python.svg
+        :target: https://hub.docker.com/r/inveniosoftware/centos7-python/
+.. image:: https://img.shields.io/docker/build/inveniosoftware/centos7-python.svg
+        :target: https://hub.docker.com/r/inveniosoftware/centos7-python/builds/
+
 Docker base images for Invenio.
