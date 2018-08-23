@@ -1,0 +1,26 @@
+sudo: false
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+env:
+  matrix:
+    - PYTHON_VERSION=3.6
+    - PYTHON_VERSION=3.7
+
+addons:
+  apt:
+    packages:
+    - docker-ce
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - docker build -t inveniosoftware/centos7-python:$PYTHON_VERSION ./python$PYTHON_VERSION/
+
+script:
+  - "docker run inveniosoftware/centos7-python:$PYTHON_VERSION pipenv --version"
