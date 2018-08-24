@@ -49,7 +49,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Create working directory
-ENV WORKING_DIR=/opt/my-site
+ENV WORKING_DIR=/opt/invenio
 ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 
@@ -58,9 +58,10 @@ RUN mkdir -p ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
 # Set folder permissions
+ENV INVENIO_USER_ID=1000
 RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
-RUN useradd invenio --uid 1000 --gid 0 && \
+RUN useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
 
 RUN npm update && \
