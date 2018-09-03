@@ -20,7 +20,7 @@ RUN yum install -y \
         libffi-devel \
         libxml2-devel \
         libxslt-devel \
-        npm
+        nodejs
 
 RUN yum clean -y all
 
@@ -48,12 +48,22 @@ RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 RUN mkdir -p ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
+# Set `npm` global under Invenio instance path
+RUN mkdir ${INVENIO_INSTANCE_PATH}/.npm-global
+ENV NPM_CONFIG_PREFIX=$INVENIO_INSTANCE_PATH/.npm-global
+RUN mkdir npm_install && cd npm_install && \
+    curl -SsL https://registry.npmjs.org/npm/-/npm-6.4.1.tgz | tar -xzf - && \
+    cd package && \
+    node bin/npm-cli.js rm npm -g && \
+    node bin/npm-cli.js install -g $(node bin/npm-cli.js pack | tail -1) && \
+    cd ../.. && rm -rf npm_install
+
+RUN npm config set prefix '${INVENIO_INSTANCE_PATH}/.npm-global'
+ENV PATH=${INVENIO_INSTANCE_PATH}/.npm-global/bin:$PATH
+
 # Set folder permissions
 ENV INVENIO_USER_ID=1000
 RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
 RUN useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
-
-RUN npm update && \
-    npm install --silent -g node-sass@3.8.0 clean-css@3.4.24 uglify-js requirejs
