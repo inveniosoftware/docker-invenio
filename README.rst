@@ -27,8 +27,8 @@ are defined the following way:
 
    Branch/tag            Dockerfile                 Docker tag
 
-   Pust to master        ---> /python3.6/Dockerfile ---> 3.6
-   Pust to master        ---> /python3.7/Dockerfile ---> 3.7
+   Push to master        ---> /python3.6/Dockerfile ---> 3.6
+   Push to master        ---> /python3.7/Dockerfile ---> 3.7
    Push /^3\.6.*/ tag    ---> /python3.6/Dockerfile ---> git-tag-name, 3.6
    Push /^3\.7.*/ tag    ---> /python3.7/Dockerfile ---> git-tag-name, 3.7
 
