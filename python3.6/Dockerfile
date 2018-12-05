@@ -1,5 +1,8 @@
 # common image to install CentOS7, updates, needed packages and NPM
 FROM centos:7
+ARG PROJECT_NAME
+RUN : "${PROJECT_NAME:?Please provide the project name by passing for example:" \
+" --build-arg PROJECT_NAME=invenio}"
 
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
 RUN yum install -y \
@@ -40,17 +43,17 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Create working directory
-ENV WORKING_DIR=/opt/invenio
-ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
-RUN mkdir -p ${INVENIO_INSTANCE_PATH}
+ENV PROJECT_DIR=/opt/${PROJECT_NAME}
+ENV INSTANCE_PATH=${PROJECT_DIR}/var/instance
+RUN mkdir -p ${INSTANCE_PATH}
 
 # copy everything inside /src
-RUN mkdir -p ${WORKING_DIR}/src
-WORKDIR ${WORKING_DIR}/src
+RUN mkdir -p ${PROJECT_DIR}/src
+WORKDIR ${PROJECT_DIR}/src
 
 # Set `npm` global under Invenio instance path
-RUN mkdir ${INVENIO_INSTANCE_PATH}/.npm-global
-ENV NPM_CONFIG_PREFIX=$INVENIO_INSTANCE_PATH/.npm-global
+RUN mkdir ${INSTANCE_PATH}/.npm-global
+ENV NPM_CONFIG_PREFIX=${INSTANCE_PATH}/.npm-global
 RUN mkdir npm_install && cd npm_install && \
     curl -SsL https://registry.npmjs.org/npm/-/npm-6.4.1.tgz | tar -xzf - && \
     cd package && \
@@ -58,12 +61,12 @@ RUN mkdir npm_install && cd npm_install && \
     node bin/npm-cli.js install -g $(node bin/npm-cli.js pack | tail -1) && \
     cd ../.. && rm -rf npm_install
 
-RUN npm config set prefix '${INVENIO_INSTANCE_PATH}/.npm-global'
-ENV PATH=${INVENIO_INSTANCE_PATH}/.npm-global/bin:$PATH
+RUN npm config set prefix '${INSTANCE_PATH}/.npm-global'
+ENV PATH=${INSTANCE_PATH}/.npm-global/bin:$PATH
 
 # Set folder permissions
-ENV INVENIO_USER_ID=1000
-RUN chgrp -R 0 ${WORKING_DIR} && \
-    chmod -R g=u ${WORKING_DIR}
-RUN useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
-    chown -R invenio:root ${WORKING_DIR}
+ENV USER_ID=1000
+RUN chgrp -R 0 ${PROJECT_DIR} && \
+    chmod -R g=u ${PROJECT_DIR}
+RUN useradd invenio --uid ${USER_ID} --gid 0 && \
+    chown -R invenio:root ${PROJECT_DIR}
