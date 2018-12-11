@@ -1,53 +1,50 @@
-Docker Invenio
-==============
+# docker-invenio
 
-[![image](https://img.shields.io/docker/automated/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/)
-[![image](https://img.shields.io/docker/build/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/builds/)
+[![Build Status](https://travis-ci.org/inveniosoftware/docker-invenio.svg?branch=master"BuildStatus\")](https://travis-ci.org/inveniosoftware/docker-invenio/branches?branch=master) [![image](https://img.shields.io/docker/automated/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/) [![image](https://img.shields.io/docker/build/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/builds/)
 
-Docker base images for [Invenio](https://github.com/inveniosoftware/invenio).
+This repository contains Docker base images to generate the environment for
+[Invenio](https://github.com/inveniosoftware/invenio) applications.
 
-Supported tags and respective Dockerfile links
---------------
+**Prerequisites** Docker: [https://docs.docker.com/install/](https://docs.docker.com/install/)
 
-* 3.6 [docker/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.6/Dockerfile).
-* 3.7 [docker/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.7/Dockerfile).
+## Usage
 
-Quick reference
---------------
+Detailed usage is described in the [invenio getting started guide](https://invenio-software.org/gettingstarted/).
 
-* Where to get help:
-[the Docker Community Forums](https://forums.docker.com/), [the Docker Community Slack](https://blog.docker.com/2016/11/introducing-docker-community-directory-docker-community-slack/), or [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=docker).
+## Build the new images
 
-* Where to file issues:
-https://github.com/inveniosoftware/docker-invenio/issues.
+Build the images by running the docker build with the appropiate tag, i.e:
 
-* Maintained by:
-[Invenio](https://github.com/inveniosoftware/).
+`docker build -f python3.6/Dockerfile -t my-site-base .`
 
-Automic builds
---------------
+## Supported Tags and respective Dockerfile links
 
-Automatic builds are configured using [Docker Hub
-builds](https://docs.docker.com/docker-hub/builds/). The tiggers are
-defined the following way:
+* 3.6 - [Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.6/Dockerfile).
 
-``` {.sourceCode .}
-Branch/tag            Dockerfile                 Docker tag
+## Helpful resources
 
-Push to master        ---> /python3.6/Dockerfile ---> 3.6
-Push to master        ---> /python3.7/Dockerfile ---> 3.7
-Push /^3\.6.*/ tag    ---> /python3.6/Dockerfile ---> git-tag-name, 3.6
-Push /^3\.7.*/ tag    ---> /python3.7/Dockerfile ---> git-tag-name, 3.7
+* [Docker Community Forums](https://forums.docker.com/)
+* [Docker Community Slack](https://blog.docker.com/2016/11/introducing-docker-community-directory-docker-community-slack/)
+* [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=docker)
+* [God himself](https://twitter.com/thetweetofgod)
+* [Issue tracker](https://github.com/inveniosoftware/docker-invenio/issues)
+
+## Automated builds
+
+Automated builds are configured using [Docker Hub builds](https://docs.docker.com/docker-hub/builds/). The tiggers are defined the following way:
+
+```(bash)
+Branch/tag               Dockerfile                Docker tag
+
+Push to master     ---> /python3.6/Dockerfile ---> 3.6
+Push /^3\.6.*/ tag ---> /python3.6/Dockerfile ---> git-tag-name, 3.6
 ```
 
-That way, we will use tags `3.6` and `3.7` as latest for these Python
-versions and there is also the possibility to push tags for specific use
-cases such as pinning certain libraries or patches. To modify the
-aforementioned configuration you can access [Inveniosoftware
-DockerHub](https://hub.docker.com/r/inveniosoftware/centos7-python/~/settings/automated-builds/).
+That way, we will use tag `3.6` as latest for Python version and there is also the possibility to push tags for specific use cases such as pinning certain libraries or patches.
 
-License
--------
+Maintained by: [InvenioSoftware](https://github.com/inveniosoftware/)
+
+## License
 
 This file is part of Invenio.
 Copyright (C) 2015-2018 CERN.
