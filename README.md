@@ -26,7 +26,6 @@ Build the images by running the docker build with the appropiate tag, i.e:
 * [Docker Community Forums](https://forums.docker.com/)
 * [Docker Community Slack](https://blog.docker.com/2016/11/introducing-docker-community-directory-docker-community-slack/)
 * [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=docker)
-* [God himself](https://twitter.com/thetweetofgod)
 * [Issue tracker](https://github.com/inveniosoftware/docker-invenio/issues)
 
 ## Automated builds
