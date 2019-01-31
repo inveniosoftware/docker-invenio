@@ -24,14 +24,17 @@ RUN yum install -y \
 
 RUN yum clean -y all
 
-# set python3.6 as default
-RUN alternatives --install /usr/bin/python python /usr/bin/python2 50
-RUN alternatives --install /usr/bin/python python /usr/bin/python3.6 60
-RUN alternatives --set python /usr/bin/python3.6
+# install and set python3.6 as default
+RUN yum install -y centos-release-scl && \
+    yum install -y rh-python36
+RUN echo '#!/bin/bash' >> /etc/profile.d/enablepython36.sh && \
+    echo '. scl_source enable rh-python36' >> /etc/profile.d/enablepython36.sh
+ENV BASH_ENV=/etc/profile.d/enablepython36.sh
 
-# symlink pip
-RUN ln -s /usr/bin/pip3.6 /usr/bin/pip
-RUN pip install --upgrade pip pipenv setuptools wheel
+RUN chmod -R g=u /etc/profile.d/enablepython36.sh /opt/rh/rh-python36 && \
+    chgrp -R 0 /etc/profile.d/enablepython36.sh /opt/rh/rh-python36
+SHELL ["/bin/bash", "-c"]
+RUN pip --version && pip install --upgrade pip pipenv setuptools wheel
 
 # set the locale
 RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
