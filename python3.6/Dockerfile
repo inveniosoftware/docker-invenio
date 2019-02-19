@@ -17,6 +17,7 @@ RUN yum install -y \
         epel-release && \
     yum groupinstall -y "Development Tools" && \
     yum install -y \
+        cairo-devel \
         libffi-devel \
         libxml2-devel \
         libxslt-devel \
