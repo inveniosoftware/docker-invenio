@@ -8,3 +8,9 @@
 Contributors
 ============
 
+- Chiara Bigarella
+- Chris Topaloudis
+- Diego Rodriguez
+- Dinos Kousidis
+- Lars Holm Nielsen
+- Rokas Maciulaitis
