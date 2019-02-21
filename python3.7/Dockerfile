@@ -19,10 +19,13 @@ RUN yum install -y \
     yum install -y \
         libffi-devel \
         libxml2-devel \
-        libxslt-devel \
-        nodejs
+        libxslt-devel
 
 RUN yum clean -y all
+
+# install nodejs version 10
+RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash - && \
+    yum install -y nodejs
 
 # Download and install Python 3.7
 RUN curl https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz -O -J -L && \
