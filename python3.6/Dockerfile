@@ -20,10 +20,13 @@ RUN yum install -y \
         cairo-devel \
         libffi-devel \
         libxml2-devel \
-        libxslt-devel \
-        nodejs
+        libxslt-devel
 
 RUN yum clean -y all
+
+# install nodejs version 10
+RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash - && \
+    yum install -y nodejs
 
 # install and set python3.6 as default
 RUN yum install -y centos-release-scl && \
