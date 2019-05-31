@@ -1,12 +1,8 @@
 # common image to install CentOS7, updates, needed packages and NPM
 FROM centos:7
 
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
 RUN yum install -y \
         yum-utils \
-        python36u \
-        python36u-devel \
-        python36u-pip \
         curl \
         git \
         rlwrap \
