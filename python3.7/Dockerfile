@@ -56,6 +56,11 @@ ENV WORKING_DIR=/opt/invenio
 ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 
+# Create files mountpoints
+RUN mkdir ${INVENIO_INSTANCE_PATH}/data
+RUN mkdir ${INVENIO_INSTANCE_PATH}/archive
+RUN mkdir ${INVENIO_INSTANCE_PATH}/static
+
 # copy everything inside /src
 RUN mkdir -p ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
