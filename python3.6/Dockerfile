@@ -20,8 +20,8 @@ RUN yum install -y \
 
 RUN yum clean -y all
 
-# install nodejs version 10
-RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash - && \
+# install nodejs version 14
+RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install -y nodejs
 
 # install and set python3.6 as default
@@ -60,7 +60,7 @@ WORKDIR ${WORKING_DIR}/src
 RUN mkdir ${INVENIO_INSTANCE_PATH}/.npm-global
 ENV NPM_CONFIG_PREFIX=$INVENIO_INSTANCE_PATH/.npm-global
 RUN mkdir npm_install && cd npm_install && \
-    curl -SsL https://registry.npmjs.org/npm/-/npm-6.4.1.tgz | tar -xzf - && \
+    curl -SsL https://registry.npmjs.org/npm/-/npm-6.14.5.tgz | tar -xzf - && \
     cd package && \
     node bin/npm-cli.js rm npm -g && \
     node bin/npm-cli.js install -g $(node bin/npm-cli.js pack | tail -1) && \
