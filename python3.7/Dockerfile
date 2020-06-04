@@ -42,7 +42,7 @@ RUN alternatives --set python /usr/bin/python3.7
 
 # symlink pip
 RUN ln -s /usr/bin/python3/bin/pip3.7 /usr/bin/pip
-RUN pip install --upgrade pip pipenv setuptools wheel
+RUN pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
 RUN ln -s /usr/bin/python3/bin/pipenv /usr/bin/pipenv
 
 # set the locale
