@@ -1,49 +1,30 @@
-# common image to install CentOS7, updates, needed packages and NPM
-FROM centos:7
+# common image to install Python 3.7 on Debian buster, updates, needed packages and NPM
+FROM python:3.7-slim-buster
 
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-RUN yum install -y \
-        yum-utils \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         curl \
         git \
         rlwrap \
         screen \
         vim \
         gcc \
-        openssl-devel \
-        bzip2-devel \
-        emacs-nox && \
-    yum install -y \
-        epel-release && \
-    yum groupinstall -y "Development Tools" && \
-    yum install -y \
-        libffi-devel \
-        libxml2-devel \
-        libxslt-devel
+        emacs-nox \
+        libffi-dev \
+        libxml2-dev \
+        libxslt-dev \
+        libcairo-5c0 \
+        # For localedef
+        locales && \
+     apt-get clean
 
-RUN yum clean -y all
 
 # install nodejs version 10
-RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
-    yum install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    apt-get clean
 
-# Download and install Python 3.7
-RUN curl https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz -O -J -L && \
-    tar xzf Python-3.7.0.tgz -C /usr/src/ && \
-    /usr/src/Python-3.7.0/configure --enable-optimizations --prefix=/usr/bin/python3 && \
-    make altinstall && \
-    ln -s /usr/bin/python3/bin/python3.7 /usr/bin/python3.7 && \
-    rm Python-3.7.0.tgz
-
-# set python3.7 as default
-RUN alternatives --install /usr/bin/python python /usr/bin/python2 50
-RUN alternatives --install /usr/bin/python python /usr/bin/python3.7 70
-RUN alternatives --set python /usr/bin/python3.7
-
-# symlink pip
-RUN ln -s /usr/bin/python3/bin/pip3.7 /usr/bin/pip
-RUN pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
-RUN ln -s /usr/bin/python3/bin/pipenv /usr/bin/pipenv
+RUN pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel --no-cache-dir
 
 # set the locale
 RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
