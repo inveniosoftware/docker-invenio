@@ -5,7 +5,6 @@ RUN yum install -y \
         yum-utils \
         curl \
         git \
-        rlwrap \
         tmux \
         vim \
         emacs-nox && \
