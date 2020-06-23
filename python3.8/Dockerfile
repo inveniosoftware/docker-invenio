@@ -27,12 +27,6 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
 
 RUN pip3 install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
 
-# set the locale
-RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
 ENV INVENIO_INSTANCE_PATH=${WORKING_DIR}/var/instance
