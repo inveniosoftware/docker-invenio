@@ -25,7 +25,7 @@ RUN yum clean -y all
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install -y nodejs
 
-RUN pip --version && pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
+RUN pip3 install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
 
 # set the locale
 RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
