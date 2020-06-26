@@ -9,6 +9,7 @@ RUN yum install -y \
         vim \
         python38 \
         python38-pip \
+        python38-devel \
         emacs-nox && \
     yum install -y \
         epel-release && \
