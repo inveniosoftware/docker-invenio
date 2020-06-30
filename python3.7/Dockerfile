@@ -1,29 +1,43 @@
-# common image to install CentOS7, updates, needed packages and NPM
-FROM centos:7
+#
+# Copyright (C) 2020 CERN.
+#
+# Invenio is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+#
 
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+FROM centos:8.2.2004
+
+
+# set the locale
+# avoid Failed to set locale, defaulting to C.UTF-8
+RUN yum install -y glibc-locale-source
+RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+# install needed packages
 RUN yum install -y \
         yum-utils \
         curl \
         git \
-        rlwrap \
-        screen \
+        tmux \
         vim \
         gcc \
-        openssl-devel \
-        bzip2-devel \
         emacs-nox && \
     yum install -y \
         epel-release && \
     yum groupinstall -y "Development Tools" && \
     yum install -y \
+        cairo-devel \
         libffi-devel \
         libxml2-devel \
-        libxslt-devel
+        libxslt-devel \
+        openssl-devel
 
 RUN yum clean -y all
 
-# install nodejs version 10
+# install nodejs version 14
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install -y nodejs
 
@@ -36,20 +50,16 @@ RUN curl https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz -O -J -L && \
     rm Python-3.7.0.tgz
 
 # set python3.7 as default
-RUN alternatives --install /usr/bin/python python /usr/bin/python2 50
-RUN alternatives --install /usr/bin/python python /usr/bin/python3.7 70
+RUN alternatives --install /usr/bin/unversioned-python python /usr/bin/python3.7 70
 RUN alternatives --set python /usr/bin/python3.7
+RUN ln -s /usr/bin/unversioned-python /usr/bin/python
+# Add python binaries to the PATH
+ENV PATH=/usr/bin/python3/bin:$PATH
 
 # symlink pip
 RUN ln -s /usr/bin/python3/bin/pip3.7 /usr/bin/pip
-RUN pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
+RUN pip --version && pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
 RUN ln -s /usr/bin/python3/bin/pipenv /usr/bin/pipenv
-
-# set the locale
-RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
