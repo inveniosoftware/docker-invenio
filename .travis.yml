@@ -8,7 +8,9 @@ services:
 
 env:
   matrix:
-    - PYTHON_VERSION=3.6
+    - PYTHON_VERSION=3.6 CENTOS=7
+    - PYTHON_VERSION=3.7 CENTOS=8
+    - PYTHON_VERSION=3.8 CENTOS=8
 
 addons:
   apt:
@@ -19,10 +21,10 @@ matrix:
   fast_finish: true
 
 before_install:
-  - docker build -t inveniosoftware/centos7-python:$PYTHON_VERSION ./python$PYTHON_VERSION/ --build-arg PROJECT_NAME=invenio
+  - docker build -t inveniosoftware/centos$CENTOS-python:$PYTHON_VERSION ./python$PYTHON_VERSION/ --build-arg PROJECT_NAME=invenio
 
 script:
-  - "docker run --name invenio-container -t -d inveniosoftware/centos7-python:$PYTHON_VERSION"
+  - "docker run --name invenio-container -t -d inveniosoftware/centos$CENTOS-python:$PYTHON_VERSION"
   - "docker cp ./tests/test_image_python$PYTHON_VERSION.sh invenio-container:/home"
   - "docker exec invenio-container chmod 777 /home/test_image_python$PYTHON_VERSION.sh"
   - "docker exec invenio-container /home/test_image_python$PYTHON_VERSION.sh"
