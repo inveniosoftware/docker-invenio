@@ -26,6 +26,9 @@ RUN yum clean -y all
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install -y nodejs
 
+# Symlink python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 RUN pip3 install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
 
 # Create working directory
