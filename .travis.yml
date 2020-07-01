@@ -25,8 +25,8 @@ before_install:
 
 script:
   - "docker run --name invenio-container -t -d inveniosoftware/centos$CENTOS-python:$PYTHON_VERSION"
-  - "docker cp ./tests/test_image_python$PYTHON_VERSION.sh invenio-container:/home"
-  - "docker exec invenio-container chmod 777 /home/test_image_python$PYTHON_VERSION.sh"
-  - "docker exec invenio-container /home/test_image_python$PYTHON_VERSION.sh"
+  - "docker cp ./tests/test_image_python.sh invenio-container:/home"
+  - "docker exec invenio-container chmod 777 /home/test_image_python.sh"
+  - "docker exec invenio-container /home/test_image_python.sh $PYTHON_VERSION"
   - "docker cp invenio-container:/tmp/tests_output.txt ."
   - "./tests/assert_image_tests_passed.sh"
