@@ -1,14 +1,16 @@
 #!/bin/bash
 
+python_version=$1
+
 if ! hash python; then
     echo "Image does not have python installed."
     echo 1 >> /tmp/tests_output.txt
     exit 1
 fi
 
-ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
-if [ "$ver" -ne "36" ]; then
-    echo "Image does not use python 3.6."
+ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')
+if [ "$ver" != "$python_version" ]; then
+    echo "Image does not use python $python_version."
     echo 1 >> /tmp/tests_output.txt
     exit 1
 fi
