@@ -58,7 +58,7 @@ ENV PATH=/usr/bin/python3/bin:$PATH
 
 # symlink pip
 RUN ln -s /usr/bin/python3/bin/pip3.7 /usr/bin/pip
-RUN pip --version && pip install --upgrade pip 'pipenv<2020-05-28' setuptools wheel
+RUN pip --version && pip install --upgrade pip 'pipenv<2020.5.28' setuptools wheel
 RUN ln -s /usr/bin/python3/bin/pipenv /usr/bin/pipenv
 
 # Create working directory
