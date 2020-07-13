@@ -48,23 +48,13 @@ The following environment variables has been set:
 
 ### Rolling builds
 
-The 3.6 image is rebuilt when the base image ``centos7:latest`` is updated.  The base image is receiving regular monthly
+The images are rebuilt when the base images are updated.  The base image are receiving regular monthly
 updates as well as emergency fixes.
 
 ## Automated builds
 
-Automated builds are configured using [Docker Hub builds](https://docs.docker.com/docker-hub/builds/). The triggers are
-defined the following way:
-
-```(bash)
-Branch/tag               Dockerfile                Docker tag
-
-Push to master     ---> /python3.6/Dockerfile ---> 3.6
-Push /^3\.6.*/ tag ---> /python3.6/Dockerfile ---> git-tag-name, 3.6
-```
-
-This way, we will use tag `3.6` as latest for Python version and there is also the possibility to push tags for specific
-use cases such as pinning certain libraries or patches.
+Automated builds are configured using [Docker Hub builds](https://docs.docker.com/docker-hub/builds/), with each
+push to master initating a Docker Hub build that will be tagged per the table above.
 
 ## License
 
