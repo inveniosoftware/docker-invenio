@@ -1,6 +1,6 @@
 # CentOS with Python 3 for Invenio
 
-[![Build Status](https://travis-ci.org/inveniosoftware/docker-invenio.svg?branch=master)](https://travis-ci.org/inveniosoftware/docker-invenio) [![image](https://img.shields.io/docker/automated/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/) [![image](https://img.shields.io/docker/build/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/builds/)
+[![Build Status](https://github.com/inveniosoftware/docker-invenio/workflows/CI/badge.svg)](https://github.com/inveniosoftware/docker-invenio/actions) [![image](https://img.shields.io/docker/automated/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/) [![image](https://img.shields.io/docker/build/inveniosoftware/centos7-python.svg)](https://hub.docker.com/r/inveniosoftware/centos7-python/builds/)
 
 This image serves as base image for [Invenio](https://github.com/inveniosoftware/invenio) instances running on CentOS.
 The purpose is to provide a base image that is usable in production environments like OpenShift.
