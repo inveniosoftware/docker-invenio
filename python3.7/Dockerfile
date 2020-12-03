@@ -45,7 +45,8 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
 RUN curl https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz -O -J -L && \
     tar xzf Python-3.7.0.tgz -C /usr/src/ && \
     /usr/src/Python-3.7.0/configure --enable-optimizations --prefix=/usr/bin/python3 && \
-    make altinstall && \
+    sudo make && \
+    sudo make altinstall && \
     ln -s /usr/bin/python3/bin/python3.7 /usr/bin/python3.7 && \
     rm Python-3.7.0.tgz
 

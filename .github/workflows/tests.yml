@@ -1,0 +1,57 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of Invenio.
+# Copyright (C) 2020 CERN.
+#
+# Invenio is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details.
+
+name: CI
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 3 * * 6'
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  Tests:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+          include:
+            - python-version: 3.6
+              centos-version: 7
+            
+            - python-version: 3.7
+              centos-version: 8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Docker build
+        run: docker build -t inveniosoftware/centos${{ matrix.centos-version }}:${{ matrix.python-version }} ./python${{ matrix.python-version }}/ --build-arg PROJECT_NAME=invenio
+
+      - name: Run tests
+        run: |
+          docker run --name invenio-container -t -d inveniosoftware/centos${{ matrix.centos-version }}:${{ matrix.python-version }}
+          docker cp ./tests/test_image_python.sh invenio-container:/home
+          docker exec invenio-container chmod 777 /home/test_image_python.sh
+          docker exec invenio-container /home/test_image_python.sh ${{ matrix.python-version }}
+          docker cp invenio-container:/tmp/tests_output.txt .
+          ./tests/assert_image_tests_passed.sh
