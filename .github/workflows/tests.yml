@@ -26,14 +26,21 @@ on:
 jobs:
   Tests:
     runs-on: ubuntu-20.04
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
           include:
             - python-version: 3.6
               centos-version: 7
-            
+              experimental: false
+
             - python-version: 3.7
               centos-version: 8
+              experimental: true
+
+            - python-version: 3.8
+              centos-version: 8
+              experimental: true
 
     steps:
       - name: Checkout
@@ -45,7 +52,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Docker build
-        run: docker build -t inveniosoftware/centos${{ matrix.centos-version }}:${{ matrix.python-version }} ./python${{ matrix.python-version }}/ --build-arg PROJECT_NAME=invenio
+        run: docker build -t inveniosoftware/centos${{ matrix.centos-version }}:${{ matrix.python-version }} ./python${{ matrix.python-version }}/ --build-arg PROJECT_NAME=invenio --build-arg CENTOS_VERSION=${{ matrix.centos-version }}
 
       - name: Run tests
         run: |

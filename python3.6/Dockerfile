@@ -4,9 +4,8 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-
-# common image to install CentOS7, updates, needed packages and NPM
-FROM centos:7
+ARG CENTOS_VERSION=7
+FROM centos:${CENTOS_VERSION}
 
 RUN yum install -y \
         yum-utils \
