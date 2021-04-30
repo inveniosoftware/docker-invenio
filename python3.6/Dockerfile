@@ -20,6 +20,7 @@ RUN yum install -y \
     yum groupinstall -y "Development Tools" && \
     yum install -y \
         cairo-devel \
+        dejavu-sans-fonts \
         libffi-devel \
         libxml2-devel \
         libxslt-devel
@@ -40,7 +41,7 @@ ENV BASH_ENV=/etc/profile.d/enablepython36.sh
 RUN chmod -R g=u /etc/profile.d/enablepython36.sh /opt/rh/rh-python36 && \
     chgrp -R 0 /etc/profile.d/enablepython36.sh /opt/rh/rh-python36
 SHELL ["/bin/bash", "-c"]
-RUN pip --version && pip install --upgrade pip 'pipenv<2020.5.28' setuptools wheel
+RUN pip --version && pip install --upgrade pip pipenv setuptools wheel
 
 # set the locale
 RUN localedef --quiet -c -i en_US -f UTF-8 en_US.UTF-8
