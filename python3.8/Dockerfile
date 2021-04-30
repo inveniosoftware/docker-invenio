@@ -23,6 +23,7 @@ RUN yum install -y \
     yum groupinstall -y "Development Tools" && \
     yum install -y \
         cairo-devel \
+        dejavu-sans-fonts \
         libffi-devel \
         libxml2-devel \
         libxslt-devel
@@ -36,7 +37,7 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
 # Symlink python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-RUN pip3 install --upgrade pip 'pipenv<2020.5.28' setuptools wheel
+RUN pip3 install --upgrade pip pipenv setuptools wheel
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
