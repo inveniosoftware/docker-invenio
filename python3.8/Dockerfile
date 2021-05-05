@@ -2,6 +2,7 @@
 # Copyright (C) 2018-2020 CERN.
 # Copyright (C) 2020 Cottage Labs LLP.
 # Copyright (C) 2021 TU Wien.
+# Copyright (C) 2021 Graz University of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -44,7 +45,10 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
     yum install -y nodejs
 
 # Symlink python
-RUN ln -s /usr/bin/python3.8 /usr/bin/python
+RUN ln -sfn /usr/bin/python3.8 /usr/bin/python3 & \
+    ln -sfn /usr/bin/python3 /usr/bin/python & \
+    ln -sfn /usr/bin/pip3.8 /usr/bin/pip3 & \
+    ln -sfn /usr/bin/pip3 /usr/bin/pip
 
 RUN pip3 install --upgrade pip pipenv setuptools wheel
 
