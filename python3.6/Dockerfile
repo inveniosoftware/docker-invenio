@@ -23,7 +23,8 @@ RUN yum install -y \
         dejavu-sans-fonts \
         libffi-devel \
         libxml2-devel \
-        libxslt-devel
+        libxslt-devel \
+        ImageMagick
 
 RUN yum clean -y all
 

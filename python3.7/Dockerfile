@@ -35,7 +35,8 @@ RUN yum install -y \
         libffi-devel \
         libxml2-devel \
         libxslt-devel \
-        openssl-devel
+        openssl-devel \
+        ImageMagick
 
 RUN yum clean -y all
 
