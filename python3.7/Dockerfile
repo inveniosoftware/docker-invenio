@@ -64,7 +64,10 @@ ENV PATH=/usr/bin/python3/bin:$PATH
 
 # symlink pip
 RUN ln -s /usr/bin/python3/bin/pip3.7 /usr/bin/pip
-RUN pip --version && pip install --upgrade pip pipenv setuptools wheel
+
+# setuptools v58 removed 2to3 support: https://setuptools.pypa.io/en/latest/history.html#v58-0-0
+# the `fs` package relies on `2to3`
+RUN pip --version && pip install --upgrade pip pipenv "setuptools<58" wheel
 RUN ln -s /usr/bin/python3/bin/pipenv /usr/bin/pipenv
 
 # Create working directory
