@@ -51,7 +51,9 @@ RUN ln -sfn /usr/bin/python3.8 /usr/bin/python3 & \
     ln -sfn /usr/bin/pip3.8 /usr/bin/pip3 & \
     ln -sfn /usr/bin/pip3 /usr/bin/pip
 
-RUN pip3 install --upgrade pip pipenv setuptools wheel
+# setuptools v58 removed 2to3 support: https://setuptools.pypa.io/en/latest/history.html#v58-0-0
+# the `fs` package relies on `2to3`
+RUN pip3 install --upgrade pip pipenv "setuptools<58" wheel
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
