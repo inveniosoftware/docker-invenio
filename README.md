@@ -7,7 +7,7 @@ The purpose is to provide a base image that is usable in production environments
 
 The image is based on the official CentOS `centos:7` and `centos:8.2.2004` images and contains:
 
-- Python 3.6, 3.7 or 3.8 set as default Python interpreter with upgraded versions of pip, pipenv, setuptools and wheel.
+- Python 3.6, 3.7, 3.8 or 3.9 set as default Python interpreter with upgraded versions of pip, pipenv, setuptools and wheel.
 - Tools: Node.js, NPM, Git, Curl Vim, Emacs, Development Tools.
 - Library devel packages: libffi, libxml2, libxslt.
 - Working directory for an Invenio instance.
@@ -19,6 +19,7 @@ The image is based on the official CentOS `centos:7` and `centos:8.2.2004` image
 | [inveniosoftware/centos7-python:3.6]( https://hub.docker.com/r/inveniosoftware/centos7-python) | 3.6 | 7        | [python3.6/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.6/Dockerfile) |
 | [inveniosoftware/centos8-python:3.7]( https://hub.docker.com/r/inveniosoftware/centos8-python) | 3.7 | 8.2.2004 | [python3.7/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.7/Dockerfile) |
 | [inveniosoftware/centos8-python:3.8]( https://hub.docker.com/r/inveniosoftware/centos8-python) | 3.8 | 8.2.2004 | [python3.8/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.8/Dockerfile) |
+[inveniosoftware/centos7-python:3.9]( https://hub.docker.com/r/inveniosoftware/centos7-python) | 3.9 | 7 | [python3.9/Dockerfile](https://github.com/inveniosoftware/docker-invenio/blob/master/python3.9/Dockerfile) |
 
 
 ## Usage
