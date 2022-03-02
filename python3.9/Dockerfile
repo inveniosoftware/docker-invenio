@@ -40,7 +40,7 @@ RUN yum clean -y all
 
 # install python3.9
 RUN wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz && tar xzf Python-3.9.7.tgz
-RUN cd Python-3.9.7 && ./configure --enable-loadable-sqlite-extensions -enable-optimizations && make altinstall
+RUN cd Python-3.9.7 && ./configure --prefix=/usr --enable-loadable-sqlite-extensions -enable-optimizations && make altinstall
 
 # # install nodejs version 14
 RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
@@ -49,6 +49,9 @@ RUN curl -sL https://rpm.nodesource.com/setup_14.x | bash - && \
 # setuptools v58 removed 2to3 support: https://setuptools.pypa.io/en/latest/history.html#v58-0-0
 # the `fs` package relies on `2to3`
 RUN pip3.9 install --upgrade pip pipenv "setuptools<58" wheel
+
+# Symlink python
+RUN ln -sfn /usr/bin/python3.9 /usr/bin/python
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
