@@ -13,10 +13,6 @@ RUN dnf upgrade --refresh -y && \
     dnf install -y \
         dnf-plugins-core \
         git \
-        tmux \
-        vim \
-        wget \
-        emacs-nox  \
         glibc-common \
         glibc-locale-source \
         glibc-langpack-en
@@ -44,13 +40,13 @@ RUN dnf groupinstall -y "Development Tools" && \
         libxslt-devel \
         ImageMagick \
         openssl-devel \
-	    bzip2-devel \
-	    xz-devel \
+        bzip2-devel \
+        xz-devel \
         sqlite-devel \
         xmlsec1-devel
 
 # install nodejs version 14, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
-RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && \
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
     export NVM_DIR="$HOME/.nvm" && \
     chmod u+x $NVM_DIR/nvm.sh && \
     bash -ic '$NVM_DIR/nvm.sh' && \
