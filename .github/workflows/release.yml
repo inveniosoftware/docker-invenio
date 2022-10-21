@@ -1,39 +1,47 @@
 name: Release
+
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - v*
+
 jobs:
-  build:
+  push_to_registry:
+    name: Push Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.1.0
-      - name: Generate Docker metadata
+        uses: actions/checkout@v3
+
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/${{ github.repository_owner }}/almalinux
+          images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
           flavor: |
             latest=true
+
+      # needed to build multi-platform images
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.1.0
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2.1.0 
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to CERN registry
+        uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v3.2.0
+          registry: registry.cern.ch
+          username: ${{ secrets.CERN_REGISTRY_USERNAME }}
+          password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
         with:
-          context: ./python3.9/almalinux9/
-          file: ./python3.9/almalinux9/Dockerfile
+          context: ./almalinux/
+          file: ./almalinux/Dockerfile
           # support images for Intel and Apple Silicon processors
           platforms: linux/amd64, linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          
