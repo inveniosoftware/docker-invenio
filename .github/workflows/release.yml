@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image
+    name: Publish Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
