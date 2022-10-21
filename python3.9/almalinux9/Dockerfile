@@ -7,7 +7,7 @@
 # under the terms of the MIT License; see LICENSE file for more details.
 #
 ARG LINUX_VERSION=9.0
-FROM almalinux:${LINUX_VERSION}
+FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION}
 
 RUN dnf upgrade --refresh -y && \
     dnf install -y \
