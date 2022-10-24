@@ -30,31 +30,6 @@ jobs:
     strategy:
       matrix:
           include:
-            - python-version: 3.6
-              image-name: centos7:3.6
-              cmd-args: -t inveniosoftware/centos7:3.6 ./python3.6/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
-            - python-version: 3.7
-              image-name: centos8:3.7
-              cmd-args: -t inveniosoftware/centos8:3.7 ./python3.7/ --build-arg CENTOS_VERSION=8
-              experimental: true
-
-            - python-version: 3.8
-              image-name: centos8:3.8
-              cmd-args: -t inveniosoftware/centos8:3.8 ./python3.8/ --build-arg CENTOS_VERSION=8
-              experimental: true
-
-            - python-version: 3.9
-              image-name: centos7:3.9
-              cmd-args: -t inveniosoftware/centos7:3.9 ./python3.9/ --build-arg CENTOS_VERSION=7
-              experimental: true
-
-            - python-version: 3.9
-              image-name: centos7:3.9
-              cmd-args: -t inveniosoftware/centos7:3.9 ./python3.9/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
             - python-version: 3.9
               image-name: almalinux
               cmd-args: -t inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
