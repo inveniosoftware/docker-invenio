@@ -46,12 +46,12 @@ RUN dnf groupinstall -y "Development Tools" && \
         sqlite-devel \
         xmlsec1-devel
 
-# install nodejs version 14, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
+# install nodejs version 18, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
 RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
     export NVM_DIR="$HOME/.nvm" && \
     chmod u+x $NVM_DIR/nvm.sh && \
     bash -ic '$NVM_DIR/nvm.sh' && \
-    bash -ic 'nvm install 14.20.0'
+    bash -ic 'nvm install 18'
 
 # Symlink python
 RUN ln -sfn /usr/bin/python3 /usr/bin/python
@@ -75,7 +75,8 @@ RUN mkdir -p ${INVENIO_INSTANCE_PATH} && \
 RUN mkdir -p ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
-# As we installed node and npm via nvm, no npm prefix is needed
+RUN npm config set prefix '${INVENIO_INSTANCE_PATH}/.npm-global'
+ENV PATH=${INVENIO_INSTANCE_PATH}/.npm-global/bin:$PATH
 
 # Set folder permissions
 ENV INVENIO_USER_ID=1000
