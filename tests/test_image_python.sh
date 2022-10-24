@@ -21,8 +21,14 @@ if ! hash pip; then
     exit 1
 fi
 
-if [ $(npm config get prefix) != '/opt/invenio/var/instance/.npm-global' ]; then
-    echo "Image does not have the correct npm prefix configured."
+if ! hash node; then
+    echo "Image does not have node installed."
+    echo 1 >> /tmp/tests_output.txt
+    exit 1
+fi
+
+if ! hash npm; then
+    echo "Image does not have npm installed."
     echo 1 >> /tmp/tests_output.txt
     exit 1
 fi
