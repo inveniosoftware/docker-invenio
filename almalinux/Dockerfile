@@ -79,3 +79,5 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
 RUN useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
+
+ENV PATH=/root/.nvm/versions/node/v18.12.0/bin:$PATH
