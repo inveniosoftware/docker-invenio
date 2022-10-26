@@ -4,6 +4,15 @@ on:
   push:
     tags:
       - v*
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 1 * *'  # once a month
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
 
 jobs:
   push_to_registry:
@@ -35,7 +44,7 @@ jobs:
           username: ${{ secrets.CERN_REGISTRY_USERNAME }}
           password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Push AlmaLinux
         uses: docker/build-push-action@v3
         with:
           context: ./almalinux/
@@ -45,3 +54,19 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Push CentOS 7 Python 3.6
+        uses: docker/build-push-action@v3
+        with:
+          context: ./centos7/python3.6/
+          file: ./centos7/python3.6/Dockerfile
+          push: true
+          tags: 3.6
+
+      - name: Push CentOS 7 Python 3.9
+        uses: docker/build-push-action@v3
+        with:
+          context: ./centos7/python3.9/
+          file: ./centos7/python3.9/Dockerfile
+          push: true
+          tags: 3.9
