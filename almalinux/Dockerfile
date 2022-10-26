@@ -46,22 +46,18 @@ RUN dnf groupinstall -y "Development Tools" && \
         sqlite-devel \
         xmlsec1-devel
 
-# install nodejs version 18, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
-    export NVM_DIR="$HOME/.nvm" && \
-    chmod u+x $NVM_DIR/nvm.sh && \
-    bash -ic '$NVM_DIR/nvm.sh' && \
-    bash -ic 'nvm install 18'
-
 # Symlink python
 RUN ln -sfn /usr/bin/python3 /usr/bin/python
 
 # Remove 'packaging' as it's coming from an rpm and can't be updated by pipenv
 RUN rm -rf /usr/lib/python3.9/site-packages/packaging /usr/lib/python3.9/site-packages/packaging-20.9.dist-info
 
-# setuptools v58 removed 2to3 support: https://setuptools.pypa.io/en/latest/history.html#v58-0-0
-# the `fs` package relies on `2to3`
-RUN pip install --upgrade pip pipenv "setuptools<58" wheel
+# install nodejs version 18, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
+RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
+    export NVM_DIR="$HOME/.nvm" && \
+    chmod u+x $NVM_DIR/nvm.sh && \
+    bash -ic '$NVM_DIR/nvm.sh' && \
+    bash -ic 'nvm install 18'
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
@@ -75,7 +71,6 @@ RUN mkdir -p ${INVENIO_INSTANCE_PATH} && \
 RUN mkdir -p ${WORKING_DIR}/src
 WORKDIR ${WORKING_DIR}/src
 
-RUN npm config set prefix '${INVENIO_INSTANCE_PATH}/.npm-global'
 ENV PATH=${INVENIO_INSTANCE_PATH}/.npm-global/bin:$PATH
 
 # Set folder permissions
@@ -84,7 +79,3 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
     chmod -R g=u ${WORKING_DIR}
 RUN useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
-
-ENV PATH=/root/.nvm/versions/node/v14.20.0/bin:$PATH
-
-
