@@ -52,6 +52,8 @@ RUN ln -sfn /usr/bin/python3 /usr/bin/python
 # Remove 'packaging' as it's coming from an rpm and can't be updated by pipenv
 RUN rm -rf /usr/lib/python3.9/site-packages/packaging /usr/lib/python3.9/site-packages/packaging-20.9.dist-info
 
+RUN pip install pipenv
+
 # install nodejs version 18, nvm.sh adds functions to shell, bash -ic loads .profile first, so functions are available
 RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && \
     export NVM_DIR="$HOME/.nvm" && \
