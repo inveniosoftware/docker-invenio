@@ -78,12 +78,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: registry.cern.ch/${{ github.repository_owner }}/centos7-python
-
       - name: Log in to CERN registry
         uses: docker/login-action@v2
         with:
@@ -97,4 +91,4 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
-          tags: ${{ matrix.tag }}
+          tags: registry.cern.ch/${{ github.repository_owner }}/centos7-python:${{ matrix.tag }}
