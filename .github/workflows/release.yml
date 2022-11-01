@@ -4,9 +4,11 @@ on:
   push:
     tags:
       - v*
+
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 1 * *'  # once a month
+    #- cron:  '0 0 * * MON'  # every Monday at midnight
+    - cron: '0 0 * * 1-5'  # TESTING: every weekday at midnight
+
   workflow_dispatch:
     inputs:
       reason:
@@ -24,14 +26,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Extract metadata (tags, labels) for Docker
+      # ensure that crons are not suspended after 60 days
+      - name: Keepalive check
+        uses: gautamkrishnar/keepalive-workflow@v1
+
+      # https://github.com/docker/metadata-action
+      # Tags:
+      #   type=semver,pattern=...: on tag pushed, with a valid `semver`, the new image
+      #     will have tags `x`, `x.y`, `x.y.z`. Pre-release GIT tag will tag image
+      #     with only pre-release tag, e.g. `x.y.z-beta.67`, and not the others
+      # Flavor:
+      #    `latest` will tag the image with `latest`
+      - name: Extract GIT metadata for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |
-            type=ref,event=branch
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=semver,pattern={{version}}
+            type=schedule,pattern={{date 'YYYYMMDD'}}
           flavor: |
             latest=true
 
@@ -57,6 +73,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  # CentOS 7 is kept, with one tag only, because previously used in Invenio.
   centos7:
     name: Publish CentOS
     runs-on: ubuntu-latest
