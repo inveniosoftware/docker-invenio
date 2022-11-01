@@ -12,7 +12,7 @@ Previous images, still available in this repository for reference only, were bas
 The [current image](almalinux/Dockerfile) is based on the AlmaLinux version 9 and contains:
 
 - Python v3.9 set as default Python interpreter with upgraded versions of pip, pipenv, setuptools and wheel.
-- Node.js v18.x
+- Node.js v16.x
 - Working directory for an Invenio instance.
 
 Images are currently published in the CERN registry `registry.cern.ch`.
