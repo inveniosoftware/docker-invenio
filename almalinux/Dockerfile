@@ -36,6 +36,7 @@ RUN dnf groupinstall -y "Development Tools" && \
         cairo-devel \
         dejavu-sans-fonts \
         libffi-devel \
+        libpq-devel \
         libxml2-devel \
         libxslt-devel \
         ImageMagick \
