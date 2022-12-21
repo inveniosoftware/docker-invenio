@@ -31,3 +31,12 @@ FROM registry.cern.ch/inveniosoftware/almalinux:latest
 
 The images are rebuilt when the base images are updated. The base image are receiving regular monthly
 updates as well as emergency fixes.
+
+### Local builds
+
+To test the Dockerimage locally, you can build it by doing:
+
+```
+cd almalinux
+docker build . -t almalinux:1
+```
