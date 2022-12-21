@@ -6,3 +6,7 @@
 
 Changes
 =======
+
+Version 1.0.2 (released 2022-12-21)
+
+- almalinux: add `libpq-devel` dependency.
