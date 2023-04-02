@@ -1,0 +1,48 @@
+name: AlmaLinux on tag
+
+on:
+  push:
+    tags:
+      - v*
+
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+
+  almalinux:
+    name: Publish AlmaLinux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # https://github.com/docker/metadata-action
+      # Tags:
+      #   type=semver,pattern=...: on tag pushed, with a valid `semver`, the new image
+      #     will have tags `x`, `x.y`, `x.y.z`. Pre-release GIT tag will tag image
+      #     with only pre-release tag, e.g. `x.y.z-beta.67`, and not the others
+      # Flavor:
+      #    `latest` will tag the image with `latest`
+      - name: Extract GIT metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: registry.cern.ch/${{ github.repository_owner }}/almalinux
+          tags: |
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{version}}
+
+      - name: Publish AlmaLinux
+        id: publish-almalinux
+        uses: ./.github/actions/_publish-almalinux.yml
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

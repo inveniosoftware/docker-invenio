@@ -1,0 +1,51 @@
+name: Publish CentOS
+
+on:
+  schedule:
+    - cron:  "0 1 * * *"  # every day at 1am
+
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+
+  # CentOS 7 is kept, with one tag only, because previously used in Invenio.
+  centos7:
+    name: Publish CentOS
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - name: CentOS 7 Python 3.6
+            context: ./centos7/python3.6/
+            file: ./centos7/python3.6/Dockerfile
+            tag: 3.6
+
+          - name: CentOS 7 Python 3.9
+            context: ./centos7/python3.9/
+            file: ./centos7/python3.9/Dockerfile
+            tag: 3.9
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log in to CERN registry
+        uses: docker/login-action@v2
+        with:
+          registry: registry.cern.ch
+          username: ${{ secrets.CERN_REGISTRY_USERNAME }}
+          password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
+
+      - name: Publish ${{ matrix.name }}
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: true
+          tags: registry.cern.ch/${{ github.repository_owner }}/centos7-python:${{ matrix.tag }}

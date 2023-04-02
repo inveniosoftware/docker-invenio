@@ -1,0 +1,27 @@
+name: Keepalive
+
+on:
+  push:
+    tags:
+      - v*
+
+  schedule:
+    - cron:  "0 0 * * *"
+
+  permissions:
+    contents: write
+
+jobs:
+
+  keepalive:
+    name: Keepalive
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # ensures that crons are not suspended after 60 days by creating
+      # a dummy commit if the last commit is 50 days (default) ago.
+      - name: Keepalive check
+        uses: gautamkrishnar/keepalive-workflow@v1
