@@ -1,0 +1,69 @@
+name: AlmaLinux on schedule
+
+on:
+  schedule:
+    - cron:  "0 0 * * *"  # every day at midnight
+
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+
+  publish-almalinux:
+    name: Publish AlmaLinux
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        tag: [v1]  # keep the list of major tags updated
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get latest tag starting with ${{ matrix.tag }}
+        run: echo "::set-env name=TAG::$(git tag -l --sort -version:refname | head -n 1 | grep -o '^${{ matrix.tag }}.*')"
+
+      - name: Checkout tag ${{ env.TAG }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Extract semver
+        run: |
+          if [[ "${{ env.TAG }}" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            # BASH_REMATCH contains the results of the most recent pattern match using the =~ operator
+            ::set-env name=MAJOR::${BASH_REMATCH[1]}
+            ::set-env name=MINOR::${BASH_REMATCH[2]}
+            ::set-env name=PATCH::${BASH_REMATCH[3]}
+            ::set-env name=VERSION::$MAJOR.$MINOR.$PATCH
+            echo "SemVer: major $MAJOR, minor $MINOR, patch: $PATCH, version: $VERSION"
+          else
+            echo "Error: tag ${{ env.TAG }} format is incorrect. Must be in the form v<major>.<minor>.<patch>." >&2
+            exit 1
+          fi
+
+      - name: Extract GIT metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: registry.cern.ch/${{ github.repository_owner }}/almalinux
+          tags: |
+            type=raw,value=${{ env.MAJOR }}
+            type=raw,pattern=${{ env.MAJOR }}.${{ MINOR }}
+            type=raw,pattern=${{ env.MAJOR }}.${{ MINOR }}.${{ PATCH }}
+            type=raw,pattern=${{ env.VERSION }}
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+          flavor: |
+            latest=true
+
+      - name: Publish AlmaLinux
+        id: publish-almalinux
+        uses: ./.github/actions/_publish-almalinux.yml
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
