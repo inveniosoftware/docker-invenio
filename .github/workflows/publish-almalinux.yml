@@ -1,10 +1,11 @@
-name: AlmaLinux on tag
+name: Publish AlmaLinux
 
 on:
   push:
     tags:
       - v*
-
+  schedule:
+    - cron:  "0 0 * * *"  # every day at midnight
   workflow_dispatch:
     inputs:
       reason:
@@ -39,10 +40,15 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}.{{minor}}.{{patch}}
             type=semver,pattern={{version}}
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+          flavor: |
+            latest=true
 
       - name: Publish AlmaLinux
         id: publish-almalinux
-        uses: ./.github/actions/_publish-almalinux.yml
+        uses: ./.github/actions/publish-almalinux
         with:
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
+          docker-tags: ${{ steps.meta.outputs.tags }}
+          docker-labels: ${{ steps.meta.outputs.labels }}
