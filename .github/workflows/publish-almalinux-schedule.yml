@@ -33,6 +33,7 @@ jobs:
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |
+            type=ref,event=workflow_dispatch,value=latest
             type=schedule,pattern={{date 'YYYYMMDD'}}
           flavor: |
             latest=true
