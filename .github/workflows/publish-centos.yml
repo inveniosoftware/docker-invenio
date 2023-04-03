@@ -2,8 +2,7 @@ name: Publish CentOS
 
 on:
   schedule:
-    - cron:  "0 1 * * *"  # every day at 1am
-
+    - cron:  "0 2 * * 2"  # at 02:00 on Tuesday
   workflow_dispatch:
     inputs:
       reason:

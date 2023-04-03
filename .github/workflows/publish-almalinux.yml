@@ -5,7 +5,7 @@ on:
     tags:
       - v*
   schedule:
-    - cron:  "0 0 * * *"  # every day at midnight
+    - cron:  "0 1 * * 2"  # at 01:00 on Tuesday
   workflow_dispatch:
     inputs:
       reason:
@@ -30,7 +30,7 @@ jobs:
       #     with only pre-release tag, e.g. `x.y.z-beta.67`, and not the others
       # Flavor:
       #    `latest` will tag the image with `latest`
-      - name: Extract GIT metadata for Docker
+      - name: Set tags for Docker images
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -45,7 +45,6 @@ jobs:
             latest=true
 
       - name: Publish AlmaLinux
-        id: publish-almalinux
         uses: ./.github/actions/publish-almalinux
         with:
           registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}

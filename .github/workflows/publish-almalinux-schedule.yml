@@ -2,7 +2,7 @@ name: Scheduled republishing
 
 on:
   schedule:
-    - cron:  "0 1 * * *"  # every day at 1am
+    - cron:  "0 0 * * 2"  # at 00:00 on Tuesday
   workflow_dispatch:
     inputs:
       reason:
@@ -26,13 +26,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      # rebuild and publish `latest/YYYYMMDD`` from main branch
+      - name: Set 'latest' tags for Docker images
+        id: meta-latest
+        uses: docker/metadata-action@v4
+        with:
+          images: registry.cern.ch/${{ github.repository_owner }}/almalinux
+          tags: |
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+          flavor: |
+            latest=true
+
+      - name: Publish AlmaLinux latest
+        uses: ./.github/actions/publish-almalinux
+        with:
+          registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
+          docker-tags: ${{ steps.meta-latest.outputs.tags }}
+          docker-labels: ${{ steps.meta-latest.outputs.labels }}
+
+      # rebuild and publish `tags`
       - name: Get latest tag starting with ${{ matrix.tag }}
         run: echo "TAG=$(git tag -l --sort -version:refname | head -n 1 | grep -o '^${{ matrix.tag }}.*')" >> $GITHUB_ENV
-
-      - name: Checkout tag ${{ env.TAG }}
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.TAG }}
 
       - name: Extract semver
         run: |
@@ -52,8 +67,13 @@ jobs:
             exit 1
           fi
 
-      - name: Extract GIT metadata for Docker
-        id: meta
+      - name: Checkout tag ${{ env.TAG }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Set 'git' tags for Docker images
+        id: meta-git
         uses: docker/metadata-action@v4
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
@@ -63,11 +83,11 @@ jobs:
             type=raw,value=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
             type=raw,value=${{ env.VERSION }}
 
-      - name: Publish AlmaLinux
-        id: publish-almalinux
+      - name: Publish AlmaLinux tags ${{ env.TAG }}
         uses: ./.github/actions/publish-almalinux
         with:
           registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
           registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
-          docker-tags: ${{ steps.meta.outputs.tags }}
-          docker-labels: ${{ steps.meta.outputs.labels }}
+          docker-tags: ${{ steps.meta-git.outputs.tags }}
+          docker-labels: ${{ steps.meta-git.outputs.labels }}
+
