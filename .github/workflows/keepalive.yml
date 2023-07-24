@@ -22,4 +22,4 @@ jobs:
       - name: Keepalive check
         uses: gautamkrishnar/keepalive-workflow@v1
         with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          gh_token: ${{ secrets.INVENIOBOT_PAT }}
