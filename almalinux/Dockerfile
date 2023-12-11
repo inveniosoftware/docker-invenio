@@ -2,11 +2,12 @@
 # Copyright (C) 2018-2021 CERN.
 # Copyright (C) 2022 Graz University of Technology.
 # Copyright (C) 2022 University of Münster.
+# Copyright (C) 2023 KTH Royal Institute of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-ARG LINUX_VERSION=9.0
+ARG LINUX_VERSION=9.3
 ARG BUILDPLATFORM=linux/amd64
 FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION}
 
