@@ -29,5 +29,4 @@ jobs:
       - name: Keepalive check
         uses: gautamkrishnar/keepalive-workflow@v1
         with:
-          use_api: true
           gh_token: ${{ secrets.INVENIOBOT_PAT }}
