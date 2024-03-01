@@ -1,6 +1,12 @@
 name: Keepalive
 
 on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
   schedule:
     - cron:  "0 0 * * *"
 
@@ -15,11 +21,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: keepalive
 
-      # ensures that crons are not suspended after 60 days by creating
-      # a dummy commit if the last commit is 50 days (default) ago.
+      # ensures that crons are not suspended after 60 days
       - name: Keepalive check
         uses: gautamkrishnar/keepalive-workflow@v1
         with:
+          use_api: true
           gh_token: ${{ secrets.INVENIOBOT_PAT }}
