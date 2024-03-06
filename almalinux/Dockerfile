@@ -1,8 +1,8 @@
 #
 # Copyright (C) 2018-2021 CERN.
-# Copyright (C) 2022 Graz University of Technology.
-# Copyright (C) 2022 University of Münster.
-# Copyright (C) 2023 KTH Royal Institute of Technology.
+# Copyright (C) 2022      Graz University of Technology.
+# Copyright (C) 2022      University of Münster.
+# Copyright (C) 2023-2024 KTH Royal Institute of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -53,9 +53,9 @@ RUN ln -sfn /usr/bin/python3 /usr/bin/python
 RUN yum remove python3-packaging -y
 RUN pip3 install --upgrade pip pipenv wheel
 
-# Install Node.js v16
-RUN curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - && \
-    yum install -y nodejs
+# Install Node.js v20
+RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
+    dnf -y install nodejs
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
