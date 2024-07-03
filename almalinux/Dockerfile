@@ -54,8 +54,14 @@ RUN yum remove python3-packaging -y
 RUN pip3 install --upgrade pip pipenv wheel
 
 # Install Node.js v16
-RUN curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - && \
-    yum install -y nodejs
+
+## The Node 16 package is signed using SHA1, which is deprecated on Almalinux 9. 
+## We change the policy to allow it.
+RUN update-crypto-policies --set DEFAULT:SHA1 &&\
+    curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - && \
+    yum install -y nodejs && \
+    ## We restore the default policy
+    update-crypto-policies --set DEFAULT
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
