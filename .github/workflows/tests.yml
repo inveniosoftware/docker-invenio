@@ -2,6 +2,7 @@
 #
 # This file is part of Invenio.
 # Copyright (C) 2020 CERN.
+# Copyright (C) 2024 Graz University of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -30,19 +31,17 @@ jobs:
     strategy:
       matrix:
           include:
-            - image-name: centos7:3.6
-              python-version: 3.6
-              cmd-args: -t inveniosoftware/centos7:3.6 ./centos7/python3.6/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
-            - image-name: centos7:3.9
-              python-version: 3.9
-              cmd-args: -t inveniosoftware/centos7:3.9 ./centos7/python3.9/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
             - image-name: almalinux
               python-version: 3.9
               cmd-args: -t inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
+              experimental: true
+            - image-name: alpine-base-builder
+              python-version: 3.12
+              cmd-args: -t inveniosoftware/alpine-base-builder ./alpine/builder
+              experimental: true
+            - image-name: alpine-base-app
+              python-version: 3.12
+              cmd-args: -t inveniosoftware/alpine-base-app ./alpine/app
               experimental: true
 
     steps:
