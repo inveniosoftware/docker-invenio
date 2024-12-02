@@ -25,25 +25,15 @@ on:
 
 jobs:
   Tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
           include:
-            - image-name: centos7:3.6
-              python-version: 3.6
-              cmd-args: -t inveniosoftware/centos7:3.6 ./centos7/python3.6/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
-            - image-name: centos7:3.9
-              python-version: 3.9
-              cmd-args: -t inveniosoftware/centos7:3.9 ./centos7/python3.9/ --build-arg CENTOS_VERSION=7
-              experimental: false
-
             - image-name: almalinux
               python-version: 3.9
               cmd-args: -t inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
-              experimental: true
+              experimental: false
 
     steps:
       - name: Checkout
