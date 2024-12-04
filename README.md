@@ -1,4 +1,4 @@
-# Invenio docker images
+# Invenio Docker images
 
 [![Build Status](https://github.com/inveniosoftware/docker-invenio/workflows/CI/badge.svg)](https://github.com/inveniosoftware/docker-invenio/actions)
 
@@ -12,7 +12,7 @@ Previous images, still available in this repository for reference only, were bas
 The [current image](almalinux/Dockerfile) is based on the AlmaLinux version 9 and contains:
 
 - Python v3.9 set as default Python interpreter with upgraded versions of pip, pipenv, setuptools and wheel.
-- Node.js v16.x
+- Node.js v20.x
 - Working directory for an Invenio instance.
 
 Images are currently published in the CERN registry `registry.cern.ch`.
@@ -34,9 +34,14 @@ updates as well as emergency fixes.
 
 ### Local builds
 
-To test the Dockerimage locally, you can build it by doing:
+To test the Dockerimage locally, you can build it and run it by doing:
 
 ```
 cd almalinux
 docker build . -t almalinux:1
+docker run -it almalinux:1 /bin/bash
 ```
+
+## Optimization
+
+You can use a tool like [dive](https://github.com/wagoodman/dive) to explore the layers of the Docker images and optimize it.
