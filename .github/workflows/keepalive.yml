@@ -22,11 +22,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: keepalive
 
-      # ensures that crons are not suspended after 60 days
+      # ensures that crons are not suspended after 45 days
       - name: Keepalive check
-        uses: gautamkrishnar/keepalive-workflow@v1
-        with:
-          gh_token: ${{ secrets.INVENIOBOT_PAT }}
+        uses: gautamkrishnar/keepalive-workflow@v2
