@@ -9,7 +9,10 @@
 #
 ARG LINUX_VERSION=9.3
 ARG BUILDPLATFORM=linux/amd64
-FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION}
+FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION} AS packages
+
+RUN echo "tsflags=nodocs" >> /etc/dnf/dnf.conf && \
+    echo "clean_requirements_on_remove=true" >> /etc/dnf/dnf.conf
 
 RUN dnf upgrade --refresh -y && \
     dnf install -y \
@@ -19,12 +22,6 @@ RUN dnf upgrade --refresh -y && \
         glibc-locale-source \
         glibc-langpack-en \
         gcc
-
-RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
 
 # EPEL: Extra Packages for Enterprise Linux 9
 # `epel-release` is not recent/complete enough, as some packages below are missing
@@ -60,23 +57,33 @@ RUN dnf install -y \
         iotop iftop \
         tcpdump bind-utils
 
-# Symlink Python
-RUN ln -sfn /usr/bin/python3 /usr/bin/python
-# `python3-packaging` is installed by `yum` and it causes issues with `pip` installations
-RUN yum remove python3-packaging -y
-RUN pip3 install --upgrade pip pipenv wheel
+# `python3-packaging` is installed by `dnf` and it causes issues with `pip` installations
+RUN dnf remove python3-packaging -y
 
 # Install Node.js
 RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
     dnf -y install nodejs
 
-# Reduce image size: clean up caches, remove RPM db files
-RUN dnf clean all && \
-    rm -rf \
-        /var/cache/dnf \
-        /var/lib/rpm/__db* \
-        /var/lib/rpm/rpmdb.sqlite \
-        /var/lib/rpm/Packages
+# Remove unrequired packages
+RUN dnf autoremove -y
+
+FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION}
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# Copy binaries from base image avoiding large dnf cache history
+COPY --from=packages /usr/ /usr/
+COPY --from=packages /etc/ /etc/
+# Without the RPM database new packages cannot be installed
+COPY --from=packages /var/lib/rpm/rpmdb.sqlite /var/lib/rpm/rpmdb.sqlite
+
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+# Symlink Python
+RUN ln -sfn /usr/bin/python3 /usr/bin/python
+RUN pip3 install --no-cache-dir --upgrade pip pipenv wheel
 
 # Create working directory
 ENV WORKING_DIR=/opt/invenio
