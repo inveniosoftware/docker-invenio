@@ -66,8 +66,8 @@ RUN ln -sfn /usr/bin/python3 /usr/bin/python
 RUN yum remove python3-packaging -y
 RUN pip3 install --upgrade pip pipenv wheel
 
-# Install Node.js v20
-RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
+# Install Node.js
+RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
     dnf -y install nodejs
 
 # Reduce image size: clean up caches, remove RPM db files
