@@ -7,9 +7,12 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-ARG LINUX_VERSION=9.3
+ARG LINUX_VERSION=9.5-minimal
 ARG BUILDPLATFORM=linux/amd64
 FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION} AS packages
+
+RUN microdnf upgrade --refresh -y &&  \
+    microdnf install -y dnf
 
 RUN echo "tsflags=nodocs" >> /etc/dnf/dnf.conf && \
     echo "clean_requirements_on_remove=true" >> /etc/dnf/dnf.conf
