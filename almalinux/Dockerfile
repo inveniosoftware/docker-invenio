@@ -7,9 +7,23 @@
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
 #
-ARG LINUX_VERSION=9.3
+ARG PYTHON_VERSION=3.12
+ARG LINUX_VERSION=9
+ARG NODEJS_VERSION=22
 ARG BUILDPLATFORM=linux/amd64
 FROM --platform=$BUILDPLATFORM almalinux:${LINUX_VERSION}
+
+ARG PYTHON_VERSION
+RUN dnf install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip\
+    && dnf clean all
+
+ARG PYTHON_VERSION
+RUN python${PYTHON_VERSION} -m pip install --upgrade pip setuptools wheel
+
+# Symlink Python
+ARG PYTHON_VERSION
+RUN ln -sfn /usr/bin/python${PYTHON_VERSION} /usr/local/bin/python3 && \
+    ln -sfn /usr/bin/pip${PYTHON_VERSION} /usr/local/bin/pip3
 
 RUN dnf upgrade --refresh -y && \
     dnf install -y \
@@ -28,9 +42,10 @@ ENV LC_ALL=en_US.UTF-8
 
 # EPEL: Extra Packages for Enterprise Linux 9
 # `epel-release` is not recent/complete enough, as some packages below are missing
+ARG LINUX_VERSION
 RUN dnf config-manager --set-enabled crb && \
     dnf install -y \
-        https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        https://dl.fedoraproject.org/pub/epel/epel-release-latest-${LINUX_VERSION}.noarch.rpm
 
 # Install needed and useful tools:
 #  - python and friends
@@ -60,14 +75,13 @@ RUN dnf install -y \
         iotop iftop \
         tcpdump bind-utils
 
-# Symlink Python
-RUN ln -sfn /usr/bin/python3 /usr/bin/python
 # `python3-packaging` is installed by `yum` and it causes issues with `pip` installations
 RUN yum remove python3-packaging -y
 RUN pip3 install --upgrade pip pipenv wheel
 
 # Install Node.js
-RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
+ARG NODEJS_VERSION
+RUN curl -fsSL https://rpm.nodesource.com/setup_${NODEJS_VERSION}.x | bash - && \
     dnf -y install nodejs
 
 # Reduce image size: clean up caches, remove RPM db files
