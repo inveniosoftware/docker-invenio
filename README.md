@@ -2,46 +2,50 @@
 
 [![Build Status](https://github.com/inveniosoftware/docker-invenio/workflows/CI/badge.svg)](https://github.com/inveniosoftware/docker-invenio/actions)
 
-This image serves as base image, usable in production environments like Kubernetes or OpenShift, for:
+This repository defines the Dockerfiles for the foundational Docker images usable in production environments like Kubernetes or OpenShift for any Invenio-based app:
 * [InvenioRDM](https://github.com/inveniosoftware/invenio-app-rdm)
 * [InvenioILS](https://github.com/inveniosoftware/invenio-app-ils)
 * [Invenio](https://github.com/inveniosoftware/invenio)
 
+## Provided images
+
+The provided images are the ones supported by CERN and/or an Invenio partner organization.
+
+| Operating System  | Dockerfile FROM                                   | Supporting organization                                    |
+| ----------------- | ------------------------------------------------- | ---------------------------------------------------------- |
+| AlmaLinux - v9    | FROM registry.cern.ch/inveniosoftware/almalinux:1 | CERN (@ntarocco)                                           |
+| Debian - bookworm | FROM TBD                                          | Northwestern University (@fenekku), Frontmatter (@mfenner) |
+|                   |                                                   |                                                            |
+
+All images provide a common baseline of:
+- Python version
+- Node and NPM version
+- development headers for all Invenio dependencies
+- "invenio" user with uid 1000
+- /opt/invenio/ working directory and appropriate subdirectories
+
 Previous images, still available in this repository for reference only, were based on `CentOS`: after the [shift from CentOS to CentOS Stream](https://blog.centos.org/2020/12/future-is-centos-stream/), the main image is now based on [AlmaLinux](https://almalinux.org/), a free alternative downstream rebuild of Red Hat Enterprise Edition.
-
-The [current image](almalinux/Dockerfile) is based on the AlmaLinux version 9 and contains:
-
-- Python v3.9 set as default Python interpreter with upgraded versions of pip, pipenv, setuptools and wheel.
-- Node.js v22.x
-- Working directory for an Invenio instance.
-
-Images are currently published in the CERN registry `registry.cern.ch`.
 
 ## Usage
 
 ### Create a ``Dockerfile``
 
-A simple ``Dockerfile`` using this base image could look like this:
+Your own simple ``Dockerfile`` using one of the base image would look like this:
 
+```dockerfile
+# Select the FROM line, you want. For AlmaLinux, it would be:
+FROM registry.cern.ch/inveniosoftware/almalinux:1
 ```
-FROM registry.cern.ch/inveniosoftware/almalinux:latest
-```
 
-### Rolling builds
+### Build and run the Docker image
 
-The images are rebuilt when the base images are updated. The base image are receiving regular monthly
-updates as well as emergency fixes.
+To test the Docker image locally, you can build it and run it by doing:
 
-### Local builds
-
-To test the Dockerimage locally, you can build it and run it by doing:
-
-```
-cd almalinux
-docker build . -t almalinux:1
-docker run -it almalinux:1 /bin/bash
+```bash
+docker build . -t my-image:1
+docker run -it my-image:1 /bin/bash
 ```
 
 ## Optimization
 
-You can use a tool like [dive](https://github.com/wagoodman/dive) to explore the layers of the Docker images and optimize it.
+You can use a tool like [dive](https://github.com/wagoodman/dive) to explore the layers of the Docker images and optimize it in your own Dockerfile.
