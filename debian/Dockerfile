@@ -3,6 +3,7 @@
 #
 # Copyright (C) 2026 Northwestern University.
 # Copyright (C) 2026 Frontmatter.
+# Copyright (C) 2026 KTH Royal Institute of Technology.
 #
 # Invenio is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -17,12 +18,12 @@ FROM --platform=${BUILD_PLATFORM} python:${PYTHON_VERSION}-${OS_VERSION}
 
 LABEL org.opencontainers.image.source=https://github.com/inveniosoftware/docker-invenio
 
-# Create relevant application directories
 ENV \
     WORKING_DIR=/opt/invenio \
     INVENIO_INSTANCE_PATH=/opt/invenio/var/instance \
     INVENIO_USER_ID=1000
 
+# Create relevant application directories
 RUN mkdir -p \
     ${WORKING_DIR}/src \
     ${INVENIO_INSTANCE_PATH}/data \
@@ -38,6 +39,10 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
     useradd invenio --uid ${INVENIO_USER_ID} --gid 0 && \
     chown -R invenio:root ${WORKING_DIR}
 
+# Install system dependencies
+# The --mount=type=cache helps cache local builds and
+# will only yield a benefit to a CI if the CI also
+# preserves filesystem between runs
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -45,12 +50,13 @@ RUN \
     && \
     # Install dependencies
     apt-get install --yes --no-install-recommends \
-        git \
-        gcc \
-        locales \
         build-essential \
+        ca-certificates \
+        curl \
         fonts-dejavu \
         imagemagick \
+        gcc \
+        git \
         libbz2-dev \
         libcairo2 \
         libffi-dev \
@@ -60,11 +66,17 @@ RUN \
         libsqlite3-dev \
         libxml2-dev \
         libxslt1-dev \
+        locales \
     && \
     # Install Node.js
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && \
     apt-get install --yes --no-install-recommends nodejs npm
+
+# Setup uv
+# From https://docs.astral.sh/uv/guides/integration/docker/
+# but using docker.io/astral/uv because failure to fetch oauth token
+COPY --from=docker.io/astral/uv:latest /uv /uvx /bin/
 
 # Set locale
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
@@ -74,4 +86,4 @@ ENV \
     LC_ALL=en_US.UTF-8
 
 # Install/update Python tooling
-RUN pip install --upgrade pip pipenv wheel
+RUN pip install --upgrade pip wheel

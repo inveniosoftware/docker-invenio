@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/inveniosoftware/docker-invenio/workflows/CI/badge.svg)](https://github.com/inveniosoftware/docker-invenio/actions)
 
-This repository defines the Dockerfiles for the foundational Docker images usable in production environments like Docker Compose, Kubernetes, OpenShift, or other container orchestrator.
+This repository defines the Dockerfiles for the foundational Docker images usable in production environments like Docker Compose, Kubernetes, OpenShift, or other container orchestrators.
 These Dockerfiles are for any Invenio-based app:
 * [InvenioRDM](https://github.com/inveniosoftware/invenio-app-rdm)
 * [InvenioILS](https://github.com/inveniosoftware/invenio-app-ils)
