@@ -68,10 +68,12 @@ RUN \
         libxslt1-dev \
         locales \
     && \
-    # Install Node.js
+    # Install Node.js, npm, pnpm
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && \
-    apt-get install --yes --no-install-recommends nodejs npm
+    apt-get install --yes --no-install-recommends nodejs npm \
+    && \
+    npm install -g pnpm@latest-10
 
 # Setup uv
 # From https://docs.astral.sh/uv/guides/integration/docker/
@@ -84,6 +86,3 @@ ENV \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
-
-# Install/update Python tooling
-RUN pip install --upgrade pip wheel
