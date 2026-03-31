@@ -12,15 +12,15 @@ These Dockerfiles are for any Invenio-based app:
 
 The provided images are the ones supported by CERN and/or an Invenio partner organization.
 
-| Operating System  | Dockerfile FROM                                   | Supporting organization                                    |
-| ----------------- | ------------------------------------------------- | ---------------------------------------------------------- |
-| AlmaLinux - v9    | FROM registry.cern.ch/inveniosoftware/almalinux:1 | CERN (@ntarocco)                                           |
-| Debian - bookworm | FROM TBD                                          | Northwestern University (@fenekku), Frontmatter (@mfenner) |
-|                   |                                                   |                                                            |
+| Operating System | Dockerfile FROM                                   | Supporting organization                                    |
+| ---------------- | ------------------------------------------------- | ---------------------------------------------------------- |
+| AlmaLinux - v9   | FROM registry.cern.ch/inveniosoftware/almalinux:1 | CERN (@ntarocco)                                           |
+| Debian - trixie  | FROM TBD                                          | Northwestern University (@fenekku), Frontmatter (@mfenner) |
+|                  |                                                   |                                                            |
 
 All images provide a common baseline of:
-- Python version
-- Node and NPM version
+- Python and uv versions
+- Node, npm and pnpm version
 - development headers for all Invenio dependencies
 - "invenio" user with uid 1000
 - /opt/invenio/ working directory and appropriate subdirectories

@@ -12,7 +12,7 @@
 ARG BUILD_PLATFORM=linux/amd64
 ARG PYTHON_VERSION=3.14
 ARG OS_VERSION=trixie
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 
 FROM --platform=${BUILD_PLATFORM} python:${PYTHON_VERSION}-${OS_VERSION}
 
@@ -78,7 +78,7 @@ RUN \
 # Setup uv
 # From https://docs.astral.sh/uv/guides/integration/docker/
 # but using docker.io/astral/uv because failure to fetch oauth token
-COPY --from=docker.io/astral/uv:latest /uv /uvx /bin/
+COPY --from=docker.io/astral/uv:0.11 /uv /uvx /bin/
 
 # Set locale
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
