@@ -40,39 +40,42 @@ RUN chgrp -R 0 ${WORKING_DIR} && \
     chown -R invenio:root ${WORKING_DIR}
 
 # Install system dependencies
-# The --mount=type=cache helps cache local builds and
-# will only yield a benefit to a CI if the CI also
-# preserves filesystem between runs
+#  The --mount=type=cache helps cache local builds and
+#  will only yield a benefit to a CI if the CI also
+#  preserves filesystem between runs
+#
+#  InvenioRDM requires the following packages that Debian already provides
+#    ca-certificates
+#    curl
+#    gcc
+#    git
+#    imagemagick
+#    libbz2-dev
+#    libcairo2
+#    libffi-dev
+#    liblzma-dev
+#    libpq-dev
+#    libssl-dev
+#    libsqlite3-dev
+#    libxml2-dev
+#    libxslt1-dev
 RUN \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update \
+    apt-get update && apt-get upgrade --yes \
     && \
-    # Install dependencies
-    apt-get install --yes --no-install-recommends \
-        build-essential \
-        ca-certificates \
-        curl \
-        fonts-dejavu \
-        imagemagick \
-        gcc \
-        git \
-        libbz2-dev \
-        libcairo2 \
-        libffi-dev \
-        liblzma-dev \
-        libpq-dev \
-        libssl-dev \
-        libsqlite3-dev \
-        libxml2-dev \
-        libxslt1-dev \
-        locales \
-    && \
-    # Install Node.js, npm, pnpm
+    # Install Node.js deb source
     curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
     && \
-    apt-get install --yes --no-install-recommends nodejs npm \
+    # Install system dependencies
+    apt-get install --yes --no-install-recommends \
+        build-essential \
+        fonts-dejavu \
+        locales \
+        nodejs \
+        npm \
     && \
+    # Install pnpm
     npm install -g pnpm@latest-10
 
 # Setup uv
