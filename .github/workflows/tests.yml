@@ -34,6 +34,10 @@ jobs:
               python-version: 3.9
               cmd-args: -t inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
               experimental: false
+            - image-name: debian
+              python-version: 3.14
+              cmd-args: -t inveniosoftware/debian ./debian/
+              experimental: false
 
     steps:
       - name: Checkout

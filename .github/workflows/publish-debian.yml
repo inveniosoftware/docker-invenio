@@ -1,0 +1,55 @@
+name: Publish Debian
+
+on:
+  push:
+    tags:
+      - v*
+  schedule:
+    - cron:  "0 1 * * 2"  # at 01:00 on Tuesday
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+
+  debian:
+    name: Publish Debian
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # https://github.com/docker/metadata-action
+      # Tags:
+      #   type=semver,pattern=...: on tag pushed, with a valid `semver`, the new image
+      #     will have tags `x`, `x.y`, `x.y.z`. Pre-release GIT tag will tag image
+      #     with only pre-release tag, e.g. `x.y.z-beta.67`, and not the others
+      # Flavor:
+      #    `latest` will tag the image with `latest`
+      - name: Set tags for Docker images
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/debian
+          tags: |
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}}
+            type=semver,pattern={{version}}
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+          flavor: |
+            latest=true
+
+      - name: Publish Debian
+        uses: ./.github/actions/publish-debian
+        with:
+          docker-tags: ${{ steps.meta.outputs.tags }}
+          docker-labels: ${{ steps.meta.outputs.labels }}
