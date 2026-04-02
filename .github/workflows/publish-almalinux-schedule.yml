@@ -29,7 +29,7 @@ jobs:
       # rebuild and publish `latest/YYYYMMDD`` from main branch
       - name: Set 'latest' tags for Docker images
         id: meta-latest
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v6
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |
@@ -75,7 +75,7 @@ jobs:
 
       - name: Set 'git' tags for Docker images
         id: meta-git
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v6
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |

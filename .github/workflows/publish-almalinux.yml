@@ -32,7 +32,7 @@ jobs:
       #    `latest` will tag the image with `latest`
       - name: Set tags for Docker images
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v6
         with:
           images: registry.cern.ch/${{ github.repository_owner }}/almalinux
           tags: |
