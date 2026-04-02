@@ -22,7 +22,7 @@ ENV \
     WORKING_DIR=/opt/invenio \
     INVENIO_INSTANCE_PATH=/opt/invenio/var/instance \
     INVENIO_USER_ID=1000 \
-    PATH=${WORKING_DIR}/src/.venv/bin:${PATH}
+    PATH=/opt/invenio/src/.venv/bin:${PATH}
 
 # Create relevant application directories
 RUN mkdir -p \
