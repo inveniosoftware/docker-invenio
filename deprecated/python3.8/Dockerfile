@@ -1,11 +1,8 @@
-#
-# Copyright (C) 2018-2020 CERN.
-# Copyright (C) 2020 Cottage Labs LLP.
-# Copyright (C) 2021 TU Wien.
-# Copyright (C) 2021 Graz University of Technology.
-#
-# Invenio is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2018-2020 CERN.
+# SPDX-FileCopyrightText: 2020 Cottage Labs LLP.
+# SPDX-FileCopyrightText: 2021 TU Wien.
+# SPDX-FileCopyrightText: 2021 Graz University of Technology.
+# SPDX-License-Identifier: MIT
 #
 ARG CENTOS_VERSION=8
 FROM centos:${CENTOS_VERSION}

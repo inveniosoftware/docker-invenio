@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2020-2022 CERN.
+# SPDX-License-Identifier: MIT
 
 python_version=$1
 

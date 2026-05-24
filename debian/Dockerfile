@@ -1,12 +1,7 @@
-# syntax=docker/dockerfile:1
-
-#
-# Copyright (C) 2026 Northwestern University.
-# Copyright (C) 2026 Frontmatter.
-# Copyright (C) 2026 KTH Royal Institute of Technology.
-#
-# Invenio is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2026 Northwestern University.
+# SPDX-FileCopyrightText: 2026 Frontmatter.
+# SPDX-FileCopyrightText: 2026 KTH Royal Institute of Technology.
+# SPDX-License-Identifier: MIT
 #
 
 ARG BUILD_PLATFORM=linux/amd64

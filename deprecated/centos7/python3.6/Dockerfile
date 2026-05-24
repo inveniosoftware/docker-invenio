@@ -1,8 +1,5 @@
-#
-# Copyright (C) 2018-2020 CERN.
-#
-# Invenio is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2018-2020 CERN.
+# SPDX-License-Identifier: MIT
 #
 ARG CENTOS_VERSION=7
 FROM centos:${CENTOS_VERSION}
