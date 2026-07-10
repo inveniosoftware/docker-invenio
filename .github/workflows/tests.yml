@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-#
-# This file is part of Invenio.
-# Copyright (C) 2020 CERN.
-#
-# Invenio is free software; you can redistribute it and/or modify it
-# under the terms of the MIT License; see LICENSE file for more details.
+# SPDX-FileCopyrightText: 2020 CERN.
+# SPDX-FileCopyrightText: 2026 Northwestern University.
+# SPDX-License-Identifier: MIT
 
 name: CI
 
@@ -29,10 +25,16 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
+          image-name: ["almalinux", "invenio-debian-rdm-v14"]
           include:
             - image-name: almalinux
+              cmd-args: --tag inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
               python-version: 3.9
-              cmd-args: -t inveniosoftware/almalinux ./almalinux/ --build-arg LINUX_VERSION=9 --build-arg BUILDPLATFORM=linux/amd64
+              experimental: false
+            # having to repeat the values in publish-debian-rdm is not ideal, but will do for now
+            - image-name: invenio-debian-rdm-v14
+              cmd-args: --tag inveniosoftware/invenio-debian-rdm-v14 ./debian/ --build-arg PYTHON_VERSION=3.14 --build-arg OS_VERSION=trixie --build-arg NODE_VERSION=24
+              python-version: 3.14
               experimental: false
 
     steps:
@@ -44,7 +46,7 @@ jobs:
 
       - name: Run tests
         run: |
-          docker run --name invenio-container -t -d inveniosoftware/${{ matrix.image-name }}
+          docker run --name invenio-container --tty --detach inveniosoftware/${{ matrix.image-name }}
           docker cp ./tests/test_image_python.sh invenio-container:/home
           docker exec invenio-container chmod 777 /home/test_image_python.sh
           docker exec invenio-container /home/test_image_python.sh ${{ matrix.python-version }}

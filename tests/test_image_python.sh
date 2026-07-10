@@ -1,5 +1,6 @@
 #!/bin/bash
 # SPDX-FileCopyrightText: 2020-2022 CERN.
+# SPDX-FileCopyrightText: 2026 Northwestern University.
 # SPDX-License-Identifier: MIT
 
 python_version=$1
@@ -10,9 +11,10 @@ if ! hash python; then
     exit 1
 fi
 
-ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')
+ver=$(python -V 2>&1 | grep -oE '[0-9]\.[0-9]+')
 if [ "$ver" != "$python_version" ]; then
     echo "Image does not use python $python_version."
+    echo "Image uses python ${ver}."
     echo 1 >> /tmp/tests_output.txt
     exit 1
 fi
