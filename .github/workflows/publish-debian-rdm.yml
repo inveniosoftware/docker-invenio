@@ -1,0 +1,92 @@
+
+# SPDX-FileCopyrightText: 2025-2026 Northwestern University.
+# SPDX-License-Identifier: MIT
+#
+# Github action run on a schedule or in response to push or manually to build
+# and publish InvenioRDM debian base image on GitHub Container Registry
+#
+# Based on: https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions
+#
+# Naming scheme: invenio-debian-rdm-v{rdm_version}
+# because:
+#  - other OS than debian possible
+#  - Dockerfile not just for RDM
+#  - indexing on RDM version allows us to provide the language/tooling we know work for that version
+#  - the Dockerfile is parameterizable so this GitHub action can be forked/copied by instance operators and
+#    tweaked to their preferred language/tooling if they have other needs.
+#
+
+on:
+  schedule:
+    - cron:  "0 3 * * 2"  # at 03:00 on Tuesday
+  push:
+    branches: ['master']
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+      version:
+        description: 'Semver'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-publish-debian-rdm:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        rdm_version: ["13", "14"]
+        # Define the specific variables for each version
+        include:
+          - rdm_version: "13"
+            python_version: "3.11"  # just because known to work
+            node_version: "22"  # just because known to work
+            os_version: "trixie"  # just because known to work
+          - rdm_version: "14"
+            python_version: "3.14"
+            node_version: "24"
+            os_version: "trixie"
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v7
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0  # v4.4.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302  # v6.2.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/invenio-debian-rdm-v${{ matrix.rdm_version }}
+          tags: |
+            type=schedule,pattern={{date 'YYYY.MM.DD'}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=${{ github.event.inputs.version }}
+            type=ref,event=branch
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a  # v7.3.0
+        with:
+          context: ./debian/
+          pull: true  # to pull fresh FROM image
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          build-args: |
+            PYTHON_VERSION=${{ matrix.python_version }}
+            NODE_VERSION=${{ matrix.node_version }}
+            OS_VERSION=${{ matrix.os_version }}
