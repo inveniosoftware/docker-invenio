@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: 2026 Northwestern University.
+# SPDX-License-Identifier: MIT
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'debian/**'
+      - 'tests/**'
+      - '.github/workflows/*-debian*.yml'
+
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '5 3 * * 6'  # 3:05am every Saturday
+
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Under the hood, the images are aligned with RDM versions
+        rdm_version: ["13", "14"]
+        # Define the specific variables for each version
+        include:
+          - rdm_version: "13"
+            python_version: "3.11"  # just because known to work
+            node_version: "22"  # just because known to work
+            os_version: "trixie"  # just because known to work
+          - rdm_version: "14"
+            python_version: "3.14"
+            node_version: "24"
+            os_version: "trixie"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set tag
+        id: set_tag
+        # exact name doesn't matter as long as combination is tested
+        run: echo "tag=${{ github.repository_owner }}/invenio:debian-python${{ matrix.python_version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker build
+        run: >
+          docker build --tag ${{ steps.set_tag.outputs.tag }} ./debian/
+          --build-arg PYTHON_VERSION=${{ matrix.python_version }}
+          --build-arg OS_VERSION=${{ matrix.os_version }}
+          --build-arg NODE_VERSION=${{ matrix.node_version }}
+
+      - name: Run tests
+        run: |
+          docker run --name invenio-container --tty --detach ${{ steps.set_tag.outputs.tag }}
+          docker cp ./tests/test_image_python.sh invenio-container:/home
+          docker exec invenio-container chmod 777 /home/test_image_python.sh
+          docker exec invenio-container /home/test_image_python.sh ${{ matrix.python_version }}
+          docker cp invenio-container:/tmp/tests_output.txt .
+          ./tests/assert_image_tests_passed.sh
