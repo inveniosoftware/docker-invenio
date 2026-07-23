@@ -6,11 +6,12 @@
 # Github Container Resigstry (GHCR) hosted Invenio Debian base image.
 
 # It is run on a schedule to keep the image fresh or manually to incorporate
-# changes quicker (e.g. for improvements or security response).
+# changes quicker (e.g. for improvements or security response). It is not run
+# based on a tagged release model, bc this repository doesn't fit that model.
 #
 # Based on: https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions
 #
-# Naming scheme:
+# Naming schemes:
 #   invenio:debian-python{python_version}
 # where python_version is an anointed one
 # because:
@@ -21,13 +22,16 @@
 # where rdm_version is a currently supported one
 # because:
 #  - Python and other tools are indexed on RDM version
-#  - doesn't mention RDM by name to not put off use by InvenioILS or Invenio framework
+#  - doesn't mention RDM by name to
+#      * not put off use by InvenioILS or Invenio framework
+#      * not confuse and take up space of image that would install RDM in it
 #  - short, with version first and os second to parallel choice process
 #
 
 on:
   schedule:
     - cron:  "0 3 * * 2"  # at 03:00 on Tuesday
+
   workflow_dispatch:
     inputs:
       reason:
