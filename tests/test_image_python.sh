@@ -37,4 +37,16 @@ if ! hash npm; then
     exit 1
 fi
 
+if ! hash pipenv; then
+    echo "Image does not have pipenv installed."
+    echo 1 >> /tmp/tests_output.txt
+    exit 1
+fi
+
+if ! hash uv; then
+    echo "Image does not have uv installed."
+    echo 1 >> /tmp/tests_output.txt
+    exit 1
+fi
+
 echo 0 >> /tmp/tests_output.txt

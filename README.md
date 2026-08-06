@@ -14,9 +14,8 @@ The provided images are the ones supported by CERN and/or an Invenio partner org
 
 | Operating System | Dockerfile FROM                                   | Supporting organization                                    |
 | ---------------- | ------------------------------------------------- | ---------------------------------------------------------- |
+| Debian - trixie  | FROM ghcr.io/inveniosoftware/invenio:14-debian    | Northwestern University (@fenekku), Frontmatter (@mfenner) |
 | AlmaLinux - v9   | FROM registry.cern.ch/inveniosoftware/almalinux:1 | CERN (@ntarocco)                                           |
-| Debian - trixie  | FROM TBD                                          | Northwestern University (@fenekku), Frontmatter (@mfenner) |
-|                  |                                                   |                                                            |
 
 All images provide a common baseline of:
 - Python and uv versions

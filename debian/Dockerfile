@@ -8,7 +8,7 @@ ARG BUILD_PLATFORM=linux/amd64
 ARG PYTHON_VERSION=3.14
 ARG OS_VERSION=trixie
 ARG NODE_VERSION=24
-ARG PNPM_VERSION=latest-10
+ARG PNPM_VERSION=latest-11
 ARG INVENIO_WEBPACKEXT_NPM_PKG_CLS=pynpm:PNPMPackage
 
 FROM --platform=${BUILD_PLATFORM} python:${PYTHON_VERSION}-${OS_VERSION}
@@ -80,7 +80,9 @@ RUN \
         nodejs \
     && \
     # Install pnpm
-    npm install -g pnpm@${PNPM_VERSION}
+    npm install -g pnpm@${PNPM_VERSION} \
+    && \
+    pip install pipenv
 
 # Setup uv
 # From https://docs.astral.sh/uv/guides/integration/docker/
