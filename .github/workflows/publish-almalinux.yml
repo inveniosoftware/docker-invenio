@@ -19,6 +19,12 @@ jobs:
     name: Publish AlmaLinux
     runs-on: ubuntu-latest
 
+    # Prepare the ground to have multiple python versions. Note that this should be passed to the
+    # underlying image
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -34,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: registry.cern.ch/${{ github.repository_owner }}/almalinux
+          images: registry.cern.ch/${{ github.repository_owner }}/almalinux-${{ matrix.python }}
           tags: |
             type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
@@ -47,6 +53,7 @@ jobs:
       - name: Publish AlmaLinux
         uses: ./.github/actions/publish-almalinux
         with:
+          python-version: ${{ matrix.python }}
           registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
           registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
           docker-tags: ${{ steps.meta.outputs.tags }}

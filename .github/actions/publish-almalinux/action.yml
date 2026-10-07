@@ -14,6 +14,9 @@ inputs:
   docker-labels:
     description: Docker image labels
     required: true
+  python-version:
+    description: Version of python to install
+    required: true
 
 runs:
   using: 'composite'
