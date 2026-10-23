@@ -63,7 +63,7 @@ RUN ln -sfn /usr/bin/python3 /usr/bin/python
 RUN yum remove python3-packaging -y
 RUN pip3 install --upgrade pip pipenv wheel
 
-COPY --from=docker.io/astral/uv:0.11 /uv /uvx /bin/
+COPY --from=docker.io/astral/uv:0.13 /uv /uvx /bin/
 
 
 # Install Node.js

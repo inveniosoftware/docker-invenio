@@ -82,12 +82,12 @@ RUN \
     # Install pnpm
     npm install -g pnpm@${PNPM_VERSION} \
     && \
-    pip install pipenv
+    pip install --upgrade "pip>=26.2.2" pipenv
 
 # Setup uv
 # From https://docs.astral.sh/uv/guides/integration/docker/
 # but using docker.io/astral/uv because failure to fetch oauth token
-COPY --from=docker.io/astral/uv:0.11 /uv /uvx /bin/
+COPY --from=docker.io/astral/uv:0.13 /uv /uvx /bin/
 
 # Set locale
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
