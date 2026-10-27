@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 CERN.
+# SPDX-License-Identifier: MIT
+
 name: Publish AlmaLinux
 
 on:
@@ -45,9 +48,10 @@ jobs:
             latest=true
 
       - name: Publish AlmaLinux
-        uses: ./.github/actions/publish-almalinux
+        uses: ./.github/actions/publish-cern-registry
         with:
           registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
           registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
           docker-tags: ${{ steps.meta.outputs.tags }}
           docker-labels: ${{ steps.meta.outputs.labels }}
+          os: "almalinux"
