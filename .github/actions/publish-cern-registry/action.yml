@@ -1,5 +1,8 @@
-name: Publish AlmaLinux
-description: Reusable action to publish the AlmaLinux Docker image
+# SPDX-FileCopyrightText: 2026 CERN.
+# SPDX-License-Identifier: MIT
+
+name: Publish CERN Registry
+description: Reusable action to publish the in the CERN registry Docker image
 
 inputs:
   registry-username:
@@ -13,6 +16,9 @@ inputs:
     required: true
   docker-labels:
     description: Docker image labels
+    required: true
+  os:
+    description: Name of the os used for the image
     required: true
 
 runs:
@@ -35,8 +41,8 @@ runs:
     - name: Publish AlmaLinux
       uses: docker/build-push-action@v3
       with:
-        context: ./almalinux/
-        file: ./almalinux/Dockerfile
+        context: "./${{ inputs.os }}/"
+        file: "./${{inputs.os}}/Dockerfile"
         # support images for Intel and Apple Silicon processors
         platforms: linux/amd64, linux/arm64
         push: true

@@ -1,5 +1,6 @@
 
 # SPDX-FileCopyrightText: 2025-2026 Northwestern University.
+# SPDX-FileCopyrightText: 2026 CERN.
 # SPDX-License-Identifier: MIT
 #
 # This is the Github action to build and publish the
@@ -27,6 +28,7 @@
 #      * not confuse and take up space of image that would install RDM in it
 #  - short, with version first and os second to parallel choice process
 #
+name: Publish Debian
 
 on:
   schedule:
@@ -102,3 +104,23 @@ jobs:
             PYTHON_VERSION=${{ matrix.python_version }}
             NODE_VERSION=${{ matrix.node_version }}
             OS_VERSION=${{ matrix.os_version }}
+
+      - name: Set tags for Docker images
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: registry.cern.ch/${{ github.repository_owner }}/debian
+          tags: |
+            type=raw,value=${{ matrix.python_version }}
+            type=schedule,pattern=${{ matrix.python_version }}-{{date 'YYYYMMDD'}}
+          flavor: |
+            latest=true
+
+      - name: Publish in gitlab
+        uses: ./.github/actions/publish-cern-registry
+        with:
+          registry-username: ${{ secrets.CERN_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.CERN_REGISTRY_PASSWORD }}
+          docker-tags: ${{ steps.meta.outputs.tags }}
+          docker-labels: ${{ steps.metadata.outputs.labels }}
+          os: "debian"
